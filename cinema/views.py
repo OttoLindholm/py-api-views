@@ -24,6 +24,11 @@ class GenreList(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+class MovieViewSet(viewsets.ModelViewSet):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+
+
 class GenreDetail(APIView):
 
     @staticmethod
