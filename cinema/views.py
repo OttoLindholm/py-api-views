@@ -24,6 +24,37 @@ class GenreList(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+class GenreDetail(APIView):
+
+    @staticmethod
+    def get_object(pk):
+        return get_object_or_404(Genre, pk=pk)
+
+    def get(self, request, pk):
+        genre = self.get_object(pk)
+        serializer = GenreSerializer(genre)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, pk):
+        genre = self.get_object(pk)
+        serializer = GenreSerializer(genre, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def patch(self, request, pk):
+        genre = self.get_object(pk)
+        serializer = GenreSerializer(genre, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, pk):
+        genre = self.get_object(pk)
+        genre.delete()
+        return Response({"message": "Genre deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
+
 @api_view(["GET", "POST"])
 def movie_list(request):
     if request.method == "GET":
